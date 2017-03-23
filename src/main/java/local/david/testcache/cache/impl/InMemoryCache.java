@@ -1,4 +1,7 @@
-package local.david.testcache.cache;
+package local.david.testcache.cache.impl;
+
+import local.david.testcache.cache.Cachable;
+import local.david.testcache.cache.Cache;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

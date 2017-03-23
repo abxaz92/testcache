@@ -1,4 +1,7 @@
-package local.david.testcache.cache;
+package local.david.testcache.cache.impl;
+
+import local.david.testcache.cache.Cachable;
+import local.david.testcache.cache.Cache;
 
 import java.io.*;
 import java.util.Objects;
@@ -36,9 +39,7 @@ public class FileStorageCache implements Cache {
         Cachable cachableCandidate = null;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             cachableCandidate = loopInStream(key, ois);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return cachableCandidate;

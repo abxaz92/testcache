@@ -1,5 +1,7 @@
 package local.david.testcache.cache;
 
+import local.david.testcache.cache.impl.FileStorageCache;
+import local.david.testcache.cache.impl.InMemoryCache;
 import local.david.testcache.exception.UnsuportedCacheLevelException;
 
 /**
