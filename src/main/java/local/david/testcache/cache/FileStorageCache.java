@@ -7,14 +7,21 @@ import java.util.Objects;
  * Created by david on 23.03.17.
  */
 public class FileStorageCache implements Cache {
-    private String fileName = "/tmp/cache";
+    private String cacheFolder = "/tmp";
 
     public <T extends Cachable> void put(T entity) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getCacheFileName(entity.getKey())))) {
             oos.writeObject(entity);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getCacheFileName(String key) {
+        StringBuilder stringBuilder = new StringBuilder(cacheFolder);
+        stringBuilder.append("/");
+        stringBuilder.append(key);
+        return stringBuilder.toString();
     }
 
     public <T extends Cachable> T get(String key, Class<T> type) {
@@ -22,8 +29,12 @@ public class FileStorageCache implements Cache {
     }
 
     public Cachable get(String key) {
+        File file = new File(getCacheFileName(key));
+        if (!file.exists())
+            return null;
+
         Cachable cachableCandidate = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             cachableCandidate = loopInStream(key, ois);
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +48,7 @@ public class FileStorageCache implements Cache {
     private Cachable loopInStream(String key, ObjectInputStream ois) throws IOException, ClassNotFoundException {
         Cachable cachableCandidate = null;
         boolean isFinished = false;
-        while (isFinished) {
+        while (!isFinished) {
             try {
                 Object obj = ois.readObject();
                 Cachable currentEntity = (Cachable) obj;
@@ -53,11 +64,14 @@ public class FileStorageCache implements Cache {
     }
 
     public void remove(String key) {
-
+        File file = new File(getCacheFileName(key));
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     public <T extends Cachable> boolean contains(T entity) {
-        Cachable cachable = get(entity.getKey());
-        return cachable != null;
+        File file = new File(getCacheFileName(entity.getKey()));
+        return file.exists();
     }
 }
