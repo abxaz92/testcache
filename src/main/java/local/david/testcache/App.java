@@ -13,16 +13,15 @@ public class App {
     private static final Logger logger = Logger.getLogger("App");
 
     public static void main(String[] args) {
+        if (args.length != 1)
+            throw new RuntimeException("Illegal cache level arg");
+
         CacheFactory cacheFactory = new CacheFactory();
-        Cache cache = cacheFactory.getCache(Integer.parseInt(args[0]));
+        int cacheLevel = Integer.parseInt(args[0]);
+        Cache cache = cacheFactory.getCache(cacheLevel);
 
-        SomeObject object1 = new SomeObject();
-        object1.setKey("1");
-        object1.setName("1");
-
-        SomeObject object2 = new SomeObject();
-        object2.setKey("2");
-        object2.setName("2");
+        SomeObject object1 = new SomeObject("1", "1");
+        SomeObject object2 = new SomeObject("2", "2");
 
         cache.put(object1);
         cache.put(object2);

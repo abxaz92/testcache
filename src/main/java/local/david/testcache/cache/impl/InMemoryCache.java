@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by david on 23.03.17.
  */
 public class InMemoryCache implements Cache {
-    private volatile Map<String, Cachable> storageMap = new ConcurrentHashMap();
+    private Map<String, Cachable> storageMap = new ConcurrentHashMap();
 
     public <T extends Cachable> void put(T entity) {
         storageMap.put(entity.getKey(), entity);

@@ -10,7 +10,7 @@ import java.util.Objects;
  * Created by david on 23.03.17.
  */
 public class FileStorageCache implements Cache {
-    private String cacheFolder = "/tmp";
+    private final static String CACHE_FOLDER = "/tmp";
 
     public <T extends Cachable> void put(T entity) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getCacheFileName(entity.getKey())))) {
@@ -21,7 +21,7 @@ public class FileStorageCache implements Cache {
     }
 
     private String getCacheFileName(String key) {
-        StringBuilder stringBuilder = new StringBuilder(cacheFolder);
+        StringBuilder stringBuilder = new StringBuilder(CACHE_FOLDER);
         stringBuilder.append("/");
         stringBuilder.append(key);
         return stringBuilder.toString();
